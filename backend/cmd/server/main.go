@@ -156,6 +156,34 @@ func main() {
 				admin.PUT("/applications/:id/status", applicationHandler.UpdateStatus)
 				admin.PUT("/complaints/:id", complaintHandler.UpdateComplaint)
 			}
+
+
+			// Property Tax routes
+properties := protected.Group("/property-tax")
+{
+    // Citizen & Admin routes
+    properties.GET("/properties", propertyHandler.GetProperties)
+    properties.GET("/properties/:propertyId", propertyHandler.GetProperty)
+    properties.POST("/properties", propertyHandler.CreateProperty)
+    properties.GET("/:propertyId/bills", propertyHandler.GetBills)
+    properties.POST("/:propertyId/payment", propertyHandler.MakePayment)
+    properties.GET("/payment-history", propertyHandler.GetPaymentHistory)
+    properties.GET("/payments/:paymentId", propertyHandler.GetPayment)
+    properties.GET("/due-bills", propertyHandler.GetDueBills)
+    properties.GET("/payments/:paymentId/receipt", propertyHandler.DownloadReceipt)
+    
+    // Admin only routes
+    admin := properties.Group("")
+    admin.Use(middleware.RoleMiddleware("admin"))
+    {
+        admin.PUT("/properties/:propertyId", propertyHandler.UpdateProperty)
+        admin.DELETE("/properties/:propertyId", propertyHandler.DeleteProperty)
+        admin.POST("/:propertyId/bills", propertyHandler.CreateBill)
+        admin.GET("/statistics", propertyHandler.GetPropertyStats)
+        admin.GET("/revenue-report", propertyHandler.GetRevenueReport)
+        admin.POST("/:propertyId/send-reminder", propertyHandler.SendPaymentReminder)
+    }
+}
 		}
 	}
 
