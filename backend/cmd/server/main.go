@@ -183,6 +183,9 @@ properties := protected.Group("/property-tax")
         admin.GET("/revenue-report", propertyHandler.GetRevenueReport)
         admin.POST("/:propertyId/send-reminder", propertyHandler.SendPaymentReminder)
     }
+
+
+	
 }
 		}
 	}
